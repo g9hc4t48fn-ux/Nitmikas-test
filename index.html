@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitmika’s | Ambient 3D Printed Lighting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- BRAND DESIGN SYSTEM & RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-card: #121216;
+            --accent-glow: #ffaa5e;
+            --text-main: #f3f4f6;
+            --text-muted: #8e929b;
+            --glass-bg: rgba(10, 10, 12, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img, video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- 1. FLOATING HEADER (GLASSMORPHISM) --- */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1400px;
+            height: 70px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-glow);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .header-icons i:hover {
+            color: var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- 2. HOMEPAGE BODY (THE EXHIBITION) --- */
+        /* Cinematic Hero Video */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(10,10,12,0.3), var(--bg-dark));
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 15px 35px;
+            background: #fff;
+            color: #000;
+            border-radius: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-glow);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        /* Section Settings */
+        section {
+            padding: 100px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        /* Texture Highlight (Horizontal Scroll) */
+        .texture-highlight {
+            background: #0f0f13;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .scroll-wrapper {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding-bottom: 30px;
+        }
+
+        .scroll-wrapper::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .texture-card {
+            min-width: 400px;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .texture-info {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            z-index: 2;
+        }
+
+        /* Asymmetrical Grid */
+        .asymmetrical-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .grid-item {
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .grid-item-1 { grid-column: span 7; height: 650px; }
+        .grid-item-2 { grid-column: span 5; height: 450px; margin-top: 100px; }
+        .grid-item-3 { grid-column: span 5; height: 550px; margin-top: -100px; }
+        .grid-item-4 { grid-column: span 7; height: 600px; }
+
+        /* --- 3. PRODUCT LISTING (CATALOG WITH HOVER EFFECT) --- */
+        .filter-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+        }
+
+        .filter-select {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        /* Lights On/Off Hover Effect */
+        .product-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .product-img.lamp-on {
+            opacity: 0;
+        }
+
+        /* Trigger active/hover state swap */
+        .product-card:hover .product-img.lamp-off {
+            opacity: 0;
+        }
+
+        .product-card:hover .product-img.lamp-on {
+            opacity: 1;
+        }
+
+        .product-meta {
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-meta h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .product-meta p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .price {
+            font-weight: 500;
+            color: var(--accent-glow);
+        }
+
+        /* --- 4. PRODUCT DETAIL (CUSTOMIZATION HUB) --- */
+        .detail-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        /* 360 & AR Viewer Elements */
+        .viewer-stage {
+            background: #0f0f13;
+            border-radius: 24px;
+            height: 600px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .viewer-360-img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            cursor: grab;
+        }
+
+        .viewer-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ar-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Customization Panel */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .control-panel h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .control-panel .detail-price {
+            font-size: 1.5rem;
+            color: var(--accent-glow);
+            margin-bottom: 30px;
+        }
+
+        .swatch-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .swatches {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .swatch {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .swatch.active {
+            border-color: #fff;
+            transform: scale(1.1);
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            padding: 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 40px;
+        }
+
+        /* Tech Specs Accordion */
+        .accordion-item {
+            border-top: 1px solid var(--glass-border);
+            padding: 20px 0;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .accordion-content {
+            padding-top: 15px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: none; /* Controlled via simple interactive toggle simulation or JS if desired */
+        }
+        
+        .accordion-item.open .accordion-content {
+            display: block;
+        }
+
+        /* --- 5. SLIDE-OUT CART & CHECKOUT REASSURANCE --- */
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--glass-border);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            z-index: 2000;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Use this class toggled via Javascript to open cart */
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .close-cart {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1f1f24;
+        }
+
+        .cart-item-details h4 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-details p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .cart-footer {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 30px;
+        }
+
+        .total-price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        /* Visual Reassurance Badge */
+        .reassurance-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 170, 94, 0.05);
+            border: 1px dashed rgba(255, 170, 94, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .reassurance-badge i {
+            color: var(--accent-glow);
+            font-size: 1.3rem;
+        }
+
+        .reassurance-badge p {
+            font-size: 0.85rem;
+            color: #e2e4e9;
+            line-height: 1.4;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 50px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Tweaks */
+        @media(max-width: 968px) {
+            .asymmetrical-grid { display: flex; flex-direction: column; }
+            .grid-item { height: 350px !important; margin: 0 !important; }
+            .detail-container { grid-template-columns: 1fr; }
+            .cart-drawer { width: 100%; right: -100%; }
+            header { padding: 0 20px; }
+            .nav-links { display: none; } /* Kept clean for desktop showcase */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">NITMIKA’S</div>
+        <nav class="nav-links">
+            <a href="#catalog" class="active">Table Lamps</a>
+            <a href="#catalog">Pendants</a>
+            <a href="#texture">Our Process</a>
+        </nav>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-bag-shopping" onclick="toggleCart()"></i>
+        </div>
+    </header>
+
+    <div class="hero">
+        <video class="hero-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1920&q=80">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-elegant-minimalist-lamp-glowing-in-the-dark-42206-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1>Sculpted by Light. Printed for Modern Spaces.</h1>
+            <p>Experience the futuristic harmony of additive manufacturing and warm geometric aesthetics.</p>
+            <a href="#catalog" class="btn-primary">Explore Exhibition</a>
+        </div>
+    </div>
+
+    <section id="texture" class="texture-highlight">
+        <h2 class="section-title">The Macro Detail</h2>
+        <div class="scroll-wrapper">
+            <div class="texture-card">
+                <img src="https://images.unsplash.com/photo-1614713570997-3142fc069994?auto=format&fit=crop&w=600&q=80" alt="3D Printed Layer Line Close-up">
+                <div class="texture-info"><h3>Uniform Precision Filament</h3></div>
+            </div>
+            <div class="texture-card">
+                <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80" alt="Nozzle Extruding Macro">
+                <div class="texture-info"><h3>0.4mm Node Layer Craftsmanship</h3></div>
+            </div>
+            <div class="texture-card">
+                <img src="https://images.unsplash.com/photo-1615840287214-7fe58a8f3685?auto=format&fit=crop&w=600&q=80" alt="Geometric Shadows">
+                <div class="texture-info"><h3>Organic Mathematical Structures</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lifestyle-exhibition">
+        <h2 class="section-title">In Architecture</h2>
+        <div class="asymmetrical-grid">
+            <div class="grid-item grid-item-1">
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=80" alt="Living room setting">
+            </div>
+            <div class="grid-item grid-item-2">
+                <img src="https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=800&q=80" alt="Bedside table glowing illumination">
+            </div>
+            <div class="grid-item grid-item-3">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Minimalist desk setup">
+            </div>
+            <div class="grid-item grid-item-4">
+                <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80" alt="Ambient corner glow">
+            </div>
+        </div>
+    </section>
+
+    <section id="catalog">
+        <h2 class="section-title">The Lighting Collection</h2>
+        
+        <div class="filter-bar">
+            <select class="filter-select"><option>Filter by Glow (All)</option><option>Warm Tone</option><option>Cool Tone</option></select>
+            <select class="filter-select"><option>Filament Color</option><option>Matte Obsidian</option><option>Chalk White</option><option>Terracotta</option></select>
+        </div>
+
+        <div class="catalog-grid">
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img class="product-img lamp-off" src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=500&q=80" alt="Aura Lamp Off">
+                    <img class="product-img lamp-on" src="https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=500&q=80" alt="Aura Lamp Glowing">
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h3>Aura Helix Stand</h3>
+                        <p>Matte Filament</p>
+                    </div>
+                    <span class="price">$145</span>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img class="product-img lamp-off" src="https://images.unsplash.com/photo-1565814636199-ae8133055c1c?auto=format&fit=crop&w=500&q=80" alt="Fractal Pendant Off">
+                    <img class="product-img lamp-on" src="https://images.unsplash.com/photo-1542728928-1413d1894ed1?auto=format&fit=crop&w=500&q=80" alt="Fractal Pendant On">
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h3>Fractal Pendant Sphere</h3>
+                        <p>Translucent PLA</p>
+                    </div>
+                    <span class="price">$185</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-detail-hub">
+        <h2 class="section-title">Configure Architecture</h2>
+        
+        <div class="detail-container">
+            <div class="viewer-stage">
+                <button class="ar-btn"><i class="fa-solid fa-mobile-screen-button"></i> View in your room (AR)</button>
+                <img id="mainProductViewer" class="viewer-360-img" src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80" alt="360 Interactive Node Target">
+                <div class="viewer-hint"><i class="fa-solid fa-rotate"></i> Drag to rotate 360° geometry</div>
+            </div>
+
+            <div class="control-panel">
+                <h2>Nitmika’s Origami Column</h2>
+                <div class="detail-price">$210</div>
+
+                <div class="swatch-title">Select Filament Color</div>
+                <div class="swatches">
+                    <div class="swatch active" style="background-color: #e5e5e5;" onclick="changeColor(this, 'white')"></div>
+                    <div class="swatch" style="background-color: #22252a;" onclick="changeColor(this, 'dark')"></div>
+                    <div class="swatch" style="background-color: #c97a53;" onclick="changeColor(this, 'terracotta')"></div>
+                </div>
+
+                <button class="btn-add-cart" onclick="toggleCart()">Add to Bag</button>
+
+                <div class="accordion-item open" onclick="this.classList.toggle('open')">
+                    <div class="accordion-header">
+                        <span>Luminance & Hardware Tech Specs</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        Fits universal E26/E27 LED bulb variants up to 15W max power rating. Package contains a beautifully woven, low-profile minimalist 2.5-meter cloth-braided premium cable with modern rotary inline power switches.
+                    </div>
+                </div>
+
+                <div class="accordion-item" onclick="this.classList.toggle('open')">
+                    <div class="accordion-header">
+                        <span>Eco-Friendly Filament Profile</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        100% components manufactured from premium bio-derived, sustainably resourced PLA filaments. High resistance structural geometry layer lines naturally scatter bright ambient light rays organically.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="cartDrawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Bag</h3>
+            <i class="fa-solid fa-xmark close-cart" onclick="toggleCart()"></i>
+        </div>
+        
+        <div class="cart-items">
+            <div class="cart-item">
+                <div class="cart-item-img">
+                    <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=150&q=80" alt="Thumb">
+                </div>
+                <div class="cart-item-details">
+                    <h4>Nitmika’s Origami Column</h4>
+                    <p>Color: Matte Chalk White</p>
+                    <p style="margin-top:5px; color:#fff;">$210</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="total-price-row">
+                <span>Estimated Subtotal</span>
+                <span class="price">$210</span>
+            </div>
+
+            <div class="reassurance-badge">
+                <i class="fa-solid fa-box-open"></i>
+                <div>
+                    <p style="font-weight: 500;">Safe, Foam-Packed Shipping</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Damage-free delivery guaranteed. Custom structurally cast foam shielding inserts protect architectural layers.</p>
+                </div>
+            </div>
+
+            <button class="btn-add-cart" style="background: var(--accent-glow); margin-bottom: 0;">Secure Checkout</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Nitmika’s Studios. Additive Manufacturing Architectural Lighting. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth functional drawer handling
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+        }
+
+        // Color Swatches interaction swap simulation mapping properties 
+        function changeColor(element, colorVariant) {
+            // Clear current selection highlight tracking rings
+            document.querySelectorAll('.swatch').forEach(sw => sw.classList.remove('active'));
+            element.classList.add('active');
+
+            const viewerImageTarget = document.getElementById('mainProductViewer');
+            
+            // Updates images instantly based on selected variant color states
+            if(colorVariant === 'white') {
+                viewerImageTarget.src = "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80";
+            } else if(colorVariant === 'dark') {
+                viewerImageTarget.src = "https://images.unsplash.com/photo-1565814636199-ae8133055c1c?auto=format&fit=crop&w=600&q=80";
+            } else if(colorVariant === 'terracotta') {
+                viewerImageTarget.src = "https://images.unsplash.com/photo-1614713570997-3142fc069994?auto=format&fit=crop&w=600&q=80";
+            }
+        }
+    </script>
+</body>
+</html>
